@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -144,19 +145,66 @@ public class TimeSheet_HAKAN {
 //	click drop down menu next to last name (department dropdown menu)	
 //	There should be no duplicate menu items in dropdown menu. 	
 //	medium	fail
- 
-	@Test
+
+//	@Test
 	public void test5() {
 		List<WebElement> departmentElements = driver.findElements(By.xpath("//select[@id='department']/option"));
 //			System.out.println(departmentElements.size()); //found 10
 		for (int i = 0; i < departmentElements.size(); i++) {
 			for (int j = i + 1; j < departmentElements.size(); j++) {
 				if (departmentElements.get(i).getText().equals((departmentElements.get(j).getText()))) {
-					System.out.println("Duplicate Element : " + departmentElements.get(j).getText() +" so test failed ");
+					System.out.println(
+							"Duplicate Element : " + departmentElements.get(j).getText() + " , so test failed ");
 				}
 			}
 		}
 	}
-}
 
+//*Go to application, week 1, click "Select a date"	
+//first week of the day for the next 4 weeks	
+//medium	pass
+//	@Test
+	public void test6() {
+		WebElement selectButton = driver.findElement(By.id("Date1"));
+		selectButton.click();
+
+		// expected values
+		String[] arr = { "4/15/2019", "4/29/2019", "5/13/2019", "5/27/2019" };
+		System.out.println("My drop-down expected elements: " + Arrays.toString(arr));
+
+		// actual values
+		List<WebElement> dropDownDates = driver.findElements(By.xpath("//select[@id='Date1']/option"));
+		for (int i = 1; i < dropDownDates.size(); i++) {
+			System.out.println(dropDownDates.get(i).getText());
+		}
+
+		// comparing expected-actual values and asserting
+		for (int i = 1, j = 0; i < dropDownDates.size() && j < arr.length; i++, j++) {
+			Assert.assertEquals(arr[j], dropDownDates.get(i).getText());
+		}
+		System.out.println("Verification is successful, all drop-down items match!");
+	}
+
+//	*Go to application, week 1, click "regular day in" 	
+//	drop down menu pops up with 30 mins increment times	
+//	high	pass
+	@Test
+	public void test7() {
+		WebElement regularDayinDropDown = driver.findElement(By.id("in1"));
+		regularDayinDropDown.click();
+
+		// expected values
+		String[] dropdownExp = { "07:30 AM", "08:00 AM", "08:30 AM", "08:40 AM", "09:30 AM", "10:00 AM", "10:30 AM",
+				"10:45 AM", "11:00 AM", "01:30 PM", "02:30 PM", "other" };
+		System.out.println(Arrays.toString(dropdownExp));
+
+		// actual values
+		List<WebElement> dropDownTimes = driver.findElements(By.xpath("//select[@id='in1']/option"));
+
+		for (int i = 1, j = 0; i < dropDownTimes.size() && j < dropdownExp.length; i++, j++) {
+			Assert.assertEquals(dropdownExp[j], dropDownTimes.get(i).getText());
+		}
+		System.out.println("Verification is successful, all items match!");
+	}
+}
 
